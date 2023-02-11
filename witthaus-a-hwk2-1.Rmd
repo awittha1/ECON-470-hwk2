@@ -1,0 +1,10 @@
+---
+title: "Research in Health Economics- Homework 2"
+author: "Alexia Witthaus Viñé"
+date: "2023-02-11"
+output: pdf_document
+---
+
+
+
+
