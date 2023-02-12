@@ -5,6 +5,66 @@ date: "2023-02-11"
 output: pdf_document
 ---
 
+```{r echo = FALSE}
+load("image.Rdata")
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning = FALSE, fig.width = 16/2, fig.height = 9/2, tidy.opts=list(width.cutoff=60), tidy=TRUE)
+```
+
+# Question 1 
+
+```{r}
+graph_1
+```
+
+# Question 2 
+
+There are `r unique_hospitals` unique hospitals in the data set. 
+
+# Question 3
+
+```{r}
+graph_3
+```
+
+# Question 4 
+
+```{r}
+graph_4 
+```
+
+# Question 5 
+
+```{r}
+table_5
+```
+
+# Question 6 
+
+```{r}
+table_6 
+```
 
 
+# Question 7 
+
+For KNN regression with inverse variance based on quartiles of bed size 
+```{r}
+nn_weight$est
+```
+
+
+For KNN regression with Mahalanobis distance based on quartiles of bed size
+```{r}
+nn_mahala$est
+```
+
+For inverse propensity weighting 
+```{r}
+delta
+```
+
+For regression
+```{r}
+reg_ate
+```
 

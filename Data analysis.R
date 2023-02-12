@@ -58,10 +58,52 @@ table_6 <- year_2012 %>% filter(!is.na(penalty))%>% group_by(quartile, penalty)%
 
 # Question 7 
 
+filtered_2012 <- year_2012[!is.na(year_2012$price) & !is.na(year_2012$penalty) & !is.na(year_2012$quartile),]
+
+# Nearest neighbors with inverse weight 
+nn_weight <- Matching::Match(Y=filtered_2012$price,
+                           Tr=filtered_2012$penalty,
+                           X=filtered_2012$quartile,
+                           M=1,
+                           Weight=1,
+                           estimand="ATE")
+
+#Nearest neighbors with malahanobis 
+nn_mahala <- Matching::Match(Y=filtered_2012$price,
+                             Tr=filtered_2012$penalty,
+                             X=filtered_2012$quartile,
+                             M=1,
+                             Weight=2,
+                             estimand="ATE")
+
+#Intverse propensity weight 
+ps <- glm(penalty~ quartile, family=binomial, filtered_2012)
+filtered_2012$propensity_score <-predict(ps, filtered_2012[, "quartile"], type='response')
+
+n_1 <- filtered_2012 %>% filter(penalty ==1)
+n_0 <- filtered_2012 %>% filter(penalty ==0)
+
+denom_1<- sum(n_1$price/n_1$propensity_score)
+nom_1 <- sum(nrow(n_1)/n_1$propensity_score)
+mu_1<- denom_1 / nom_1
+
+denom_0<- sum(n_0$price/(1-n_0$propensity_score))
+nom_0 <- sum(nrow(n_0)/(1 - n_0$propensity_score))
+mu_0<- denom_0 / nom_0
+
+delta <- mu_1 - mu_0
+
+#Regression
+
+reg1 <- lm(penalty ~ as.factor(quartile), data=n_1)
+reg0 <- lm(penalty~ as.factor(quartile), data=n_0)
+pred1 <- predict(reg1,new=n_1[, "quartile"])
+pred0 <- predict(reg0,new=n_0[, "quartile"])
+reg_ate <- mean(sum(pred1)-sum(pred0))
 
 
 
-  
+save.image("image.Rdata")
 
 
 
