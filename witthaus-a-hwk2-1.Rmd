@@ -68,3 +68,34 @@ For regression
 reg_ate
 ```
 
+
+# Question 8 
+
+I am pretty sure I made a mistake above, but I would expect the results to be similar, given that we are controlling for the same variables in all the estimators. 
+
+
+# Question 9 
+
+I don't think I have a casual effect above, since I have only controlled for a few variables (quartiles, penalty). There are likely other variables such as the competition mentioned in class, not included in the estimators that bias the result. 
+
+# Question 10
+
+The hardest part for me was getting the data this time, as I had to do it manually. Apart from this, I have had a hard time figuring out how to code what we learned in class in regards to IPW. I understood the theory, but had a hard time putting it into practice. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
