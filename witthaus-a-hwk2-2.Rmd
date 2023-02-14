@@ -1,0 +1,72 @@
+---
+title: "Research in Health Economics- Homework 2"
+author: "Alexia Witthaus Viñé"
+date: "2023-02-14"
+output: pdf_document
+---
+```{r echo = FALSE}
+load("image.Rdata")
+library(lemon)
+knit_print.data.frame <- lemon_print
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning = FALSE, fig.width = 16/2, fig.height = 9/2, tidy.opts=list(width.cutoff=60), tidy=TRUE)
+```
+
+# Question 1 
+
+```{r}
+graph_1
+```
+
+# Question 2 
+
+There are `r unique_hospitals` unique hospitals in the data set. 
+
+# Question 3
+
+```{r}
+graph_3
+```
+
+# Question 4 
+
+```{r}
+graph_4 
+```
+
+# Question 5 
+
+The average price for a hospital without penalty is `r round(table_5$price[1],2)`, while the average price of a hospital with penalty is `r round(table_5$price[2],2)`. 
+
+
+# Question 6 
+
+```{r, render = lemon_print}
+table_6 
+```
+
+
+# Question 7 
+
+ * The estimate of the ATE for KNN regression with inverse variance is  **`r round(nn_weight$est,2) `**
+
+
+* The estimate of the ATE for KNN regression with Mahalanobis distance is **`r round(nn_mahala$est,2)`**
+
+
+* The estimate of the ATE for inverse propensity weighting is **`r round(delta,2)`**
+
+* The estimate of the ATE using regression is  **`r round(reg_ate,2)`**
+
+
+# Question 8 
+
+I am pretty sure I made a mistake above, but I would expect the results to be similar, given that we are controlling for the same variables in all the estimators. 
+
+
+# Question 9 
+
+I don't think I have a casual effect above, since I have only controlled for a few variables (quartiles, penalty). There are likely other variables such as the competition mentioned in class, not included in the estimators that bias the result. 
+
+# Question 10
+
+The hardest part for me was getting the data this time, as I had to do it manually. Apart from this, I have had a hard time figuring out how to code what we learned in class in regards to IPW. I understood the theory, but had a hard time putting it into practice.  
