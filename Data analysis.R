@@ -21,9 +21,13 @@ unique_hospitals <- length(unique(hcris$provider_number))
 # Question 3 
 
 graph_3 <- ggplot(hcris, aes(x=as.factor(year), y=tot_charges)) + 
-  geom_violin()+
+  geom_violin(trim = FALSE, fill = 'deepskyblue3')+
   labs(title = "Distribution of total charges in each year", x = "Year", y = "Total charges")+
-  theme_bw()
+  stat_summary(fun=median, geom="point", size=0.5)+
+  theme_bw()+
+  theme(axis.text.x = element_text( angle = 45, size = 9, hjust = 1), plot.title = element_text(hjust = 0.5))
+
+ graph_3
 
 # Question 4 
 
@@ -32,15 +36,28 @@ hcris$price_num <- (hcris$ip_charges + hcris$icu_charges + hcris$ancillary_charg
 hcris$price_denom <-  hcris$tot_discharges - hcris$mcare_discharges
 hcris$price <- hcris$price_num/hcris$price_denom
 
-graph_4 <- ggplot(hcris, aes(as.factor(year), price))+
-  geom_violin()+
-  labs(title = "Distribution of hospital prices per year", x = "Year", y = "Hospital price")+
-  theme_bw()
+hcris<- hcris %>% ungroup() %>%
+  filter(price_denom>100, !is.na(price_denom), 
+         price_num>0, !is.na(price_num),
+         price<100000, 
+         beds>30) %>%
+  mutate( hvbp_payment = ifelse(is.na(hvbp_payment),0,hvbp_payment),
+          hrrp_payment = ifelse(is.na(hrrp_payment),0,abs(hrrp_payment)),
+          penalty = (hvbp_payment-hrrp_payment<0))
 
+
+graph_4 <- ggplot(hcris, aes(as.factor(year), price))+
+  geom_violin(trim = FALSE, fill = 'deepskyblue3')+
+  labs(title = "Distribution of hospital prices per year", x = "Year", y = "Hospital price")+
+  stat_summary(fun=median, geom="point", size=0.5)+
+  theme_bw()+
+  theme(axis.text.x = element_text( angle = 45, size = 9, hjust = 1), plot.title = element_text(hjust = 0.5))
+
+graph_4
 # Question 5 
 
 year_2012 <- hcris%>% filter(year == 2012)
-year_2012$penalty <- ifelse(year_2012$hvbp_payment + year_2012$hrrp_payment < 0 , 1,0)
+
 
 table_5 <- year_2012%>% filter(!is.na(penalty))%>%
   group_by(penalty)%>% 
@@ -110,6 +127,31 @@ save.image("image.Rdata")
 
 
 
+#Class notes 
+
+#chagne hrrp for only positive numbers, change NA for 0
+#transform violin plot to be more informative(drop beds smaller than 30, price over 10,000, drop thigns with 0 in denominator)
+#for 5 mean difference of 335
+#love plot using library(cobalt) to see if common support holds, strict overlap 
+
+
+#  exact matching
+# nn_mahala <- Matching::Match(Y=filtered_2012$price,
+#                              Tr=filtered_2012$penalty,
+#                              X=5 column matrix/ dataframe/ he used medicare discharges,
+#                              M=1,
+#                              exact = TRUE)
+
+# X is subset of original dataset, tibble (lp.covs %>% select(beds,mcaid_discharge))
+
+
+#Variables used: beds, medicaid discharges, inpatient charges
+# nn_mahala <- Matching::Match(Y=filtered_2012$price,
+#                              Tr=filtered_2012$penalty,
+#                              X=lp.covs,
+#                              M=1,
+#                              Weight = 1
+#                              estimand= "ATE")
 
 
 
